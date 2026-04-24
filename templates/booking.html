@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center py-5">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <img src="{{ url_for('static', filename='images/' + tour.image) }}" 
+                         class="img-fluid h-100" 
+                         style="object-fit: cover; min-height: 300px;" 
+                         alt="{{ tour.name }}"
+                         onerror="this.src='https://via.placeholder.com/500x700?text=Du+Lịch'">
+                </div>
+                
+                <div class="col-md-7">
+                    <div class="card-body p-4 p-lg-5">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb small">
+                                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                                <li class="breadcrumb-item active">Đặt tour</li>
+                            </ol>
+                        </nav>
+                        
+                        <h2 class="fw-bold text-dark mb-1">{{ tour.name }}</h2>
+                        <p class="text-danger fs-4 fw-bold mb-4">{{ tour.price }} <span class="text-muted fs-6 fw-normal">/ khách</span></p>
+                        
+                        <hr class="text-muted opacity-25">
+                        
+                        <form action="/book/{{ tour.id }}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-uppercase">Ngày khởi hành</label>
+                                <input type="date" name="departure_date" class="form-control form-control-lg border-light-subtle bg-light" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-uppercase">Số lượng khách</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-light-subtle"><i class="bi bi-people"></i></span>
+                                    <input type="number" name="guests" class="form-control form-control-lg border-light-subtle bg-light" min="1" max="20" value="1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small text-uppercase">Ghi chú yêu cầu</label>
+                                <textarea name="note" class="form-control border-light-subtle bg-light" rows="3" placeholder="Ví dụ: Ăn chay, phòng tầng cao..."></textarea>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                {% if current_user.is_authenticated %}
+                                    <button type="submit" class="btn btn-success btn-lg py-3 fw-bold rounded-3 shadow-sm">
+                                        XÁC NHẬN ĐẶT TOUR <i class="bi bi-check2-circle ms-1"></i>
+                                    </button>
+                                {% else %}
+                                    <a href="/login" class="btn btn-warning btn-lg py-3 fw-bold rounded-3 shadow-sm">
+                                        ĐĂNG NHẬP ĐỂ ĐẶT TOUR
+                                    </a>
+                                {% endif %}
+                                <a href="/" class="btn btn-link text-muted text-decoration-none">Thay đổi lựa chọn</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

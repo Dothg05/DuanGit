@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div class="display-4 text-primary mb-2">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <h2 class="fw-bold">Chỉnh Sửa Tour</h2>
+                    <p class="text-muted small">Cập nhật thông tin cho: <strong>{{ tour.name }}</strong></p>
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Tên địa danh/Tour</label>
+                        <input type="text" name="name" value="{{ tour.name }}" class="form-control bg-light border-0 py-2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Giá tour</label>
+                        <input type="text" name="price" value="{{ tour.price }}" class="form-control bg-light border-0 py-2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Tên file ảnh đại diện</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0 text-muted small">static/images/</span>
+                            <input type="text" name="image" value="{{ tour.image }}" class="form-control bg-light border-0 py-2" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small">Mô tả chi tiết (Chỉnh sửa văn bản và hình ảnh)</label>
+                        <textarea name="description" id="edit_tour_editor" class="form-control">{{ tour.description or '' }}</textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-3 fw-bold rounded-pill shadow-sm">
+                            CẬP NHẬT THÔNG TIN <i class="bi bi-check-circle ms-1"></i>
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-light py-2 rounded-pill">Quay lại</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    CKEDITOR.replace('edit_tour_editor', {
+        height: 400,
+        // Cấu hình này cho phép bạn dán ảnh hoặc chèn link ảnh
+        removeButtons: 'PasteFromWord'
+    });
+</script>
+
+<script>
+    // Cấu hình chung cho bộ soạn thảo
+    var editorConfig = {
+        height: 400,
+        // Kích hoạt plugin căn lề
+        extraPlugins: 'justify', 
+        // Tùy chỉnh thanh công cụ để hiện các nút căn lề
+        toolbar: [
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat' ] },
+            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] },
+            { name: 'styles', items: [ 'Format', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
+        ],
+        removeButtons: 'PasteFromWord'
+    };
+
+    // Áp dụng cho ID của textarea trong trang chỉnh sửa
+    CKEDITOR.replace('edit_tour_editor', editorConfig);
+</script>
+
+<script>
+    // Cấu hình hỗ trợ căn lề linh hoạt cho cả văn bản và hình ảnh
+    var tourEditorConfig = {
+        extraPlugins: 'justify,image2', // image2 cho phép căn giữa ảnh chuyên sâu
+        height: 400,
+        toolbar: [
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat' ] },
+            { name: 'styles', items: [ 'Format', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
+        ],
+        // Cấu hình để trình soạn thảo thêm các class CSS tương ứng khi chọn nút căn lề
+        image2_alignClasses: [ 'image-left', 'image-center', 'image-right' ],
+        image2_disableResizer: false,
+        allowedContent: true // Cho phép giữ lại các thuộc tính style căn giữa khi lưu
+    };
+
+    // Áp dụng cho trang Chỉnh sửa (ID: edit_tour_editor)
+    if (document.getElementById('edit_tour_editor')) {
+        CKEDITOR.replace('edit_tour_editor', tourEditorConfig);
+    }
+
+    // Áp dụng cho trang Thêm mới (ID: add_tour_editor)
+    if (document.getElementById('add_tour_editor')) {
+        CKEDITOR.replace('add_tour_editor', tourEditorConfig);
+    }
+</script>
+
+{% endblock %}

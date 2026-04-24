@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div class="display-4 text-warning mb-2">
+                        <i class="bi bi-plus-square-fill"></i>
+                    </div>
+                    <h2 class="fw-bold">Thêm Địa Điểm Mới</h2>
+                    <p class="text-muted small">Dành cho Quản trị viên quản lý kho tour</p>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Tên địa danh/Tour</label>
+                        <input type="text" name="name" class="form-control bg-light border-0 py-2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Giá tour (hiển thị)</label>
+                        <input type="text" name="price" class="form-control bg-light border-0 py-2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Tải ảnh đại diện</label>
+                        <input type="file" name="image_file" class="form-control bg-light border-0 py-2" accept="image/*" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small">Mô tả chi tiết tour (Có thể chèn ảnh)</label>
+                        <textarea name="description" id="tour_editor" class="form-control"></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning py-3 fw-bold rounded-pill shadow-sm text-dark">
+                            LƯU VÀO CƠ SỞ DỮ LIỆU <i class="bi bi-database-add ms-1"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Kích hoạt CKEditor cho ô description
+    CKEDITOR.replace('tour_editor', {
+        height: 400,
+        // Hỗ trợ chèn ảnh qua link hoặc dán
+        removeButtons: 'PasteFromWord'
+    });
+</script>
+
+<script>
+    // Sử dụng cùng một biến editorConfig như trên để đồng bộ giao diện
+    var editorConfig = {
+        height: 400,
+        extraPlugins: 'justify',
+        toolbar: [
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] },
+            { name: 'insert', items: [ 'Image', 'Table' ] }
+        ]
+    };
+
+    // Áp dụng cho ID của textarea trong trang thêm mới
+    CKEDITOR.replace('add_tour_editor', editorConfig);
+</script>
+
+<script>
+    // Cấu hình hỗ trợ căn lề linh hoạt cho cả văn bản và hình ảnh
+    var tourEditorConfig = {
+        extraPlugins: 'justify,image2', // image2 cho phép căn giữa ảnh chuyên sâu
+        height: 400,
+        toolbar: [
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat' ] },
+            { name: 'styles', items: [ 'Format', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] }
+        ],
+        // Cấu hình để trình soạn thảo thêm các class CSS tương ứng khi chọn nút căn lề
+        image2_alignClasses: [ 'image-left', 'image-center', 'image-right' ],
+        image2_disableResizer: false,
+        allowedContent: true // Cho phép giữ lại các thuộc tính style căn giữa khi lưu
+    };
+
+    // Áp dụng cho trang Chỉnh sửa (ID: edit_tour_editor)
+    if (document.getElementById('edit_tour_editor')) {
+        CKEDITOR.replace('edit_tour_editor', tourEditorConfig);
+    }
+
+    // Áp dụng cho trang Thêm mới (ID: add_tour_editor)
+    if (document.getElementById('add_tour_editor')) {
+        CKEDITOR.replace('add_tour_editor', tourEditorConfig);
+    }
+</script>
+
+{% endblock %}

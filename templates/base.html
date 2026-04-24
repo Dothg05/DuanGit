@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VivuTour - Đặt Tour Trực Tuyến</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .navbar { box-shadow: 0 2px 4px rgba(0,0,0,.08); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-warning" href="{{ url_for('index') }}">
+                <i class="bi bi-airplane-engines-fill me-2"></i>VivuTour
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Trang chủ</a></li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.email == 'admin@gmail.com' %}
+                            <li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('add_tour') }}">Thêm Tour</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Cá nhân</a></li>
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm ms-lg-3" href="{{ url_for('logout') }}">Đăng xuất</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Đăng nhập</a></li>
+                        <li class="nav-item"><a class="btn btn-warning btn-sm ms-lg-3 text-dark fw-bold" href="{{ url_for('register') }}">Đăng ký</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="bg-dark text-light py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-warning fw-bold"><i class="bi bi-airplane-engines-fill me-2"></i>VivuTour</h5>
+                <p class="small text-secondary">Hệ thống đặt tour du lịch trực tuyến uy tín, mang đến trải nghiệm tuyệt vời cho mọi hành trình của bạn.</p>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <h5 class="fw-bold mb-3">Liên hệ</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 small">
+                        <i class="bi bi-geo-alt-fill text-warning me-2"></i>
+                        Đường Z115, Quyết Thắng, TP. Thái Nguyên
+                    </li>
+                    <li class="mb-2 small">
+                        <i class="bi bi-telephone-fill text-warning me-2"></i>
+                        +84 375 012 005
+                    </li>
+                    <li class="mb-2 small">
+                        <i class="bi bi-envelope-fill text-warning me-2"></i>
+                        contact@vivutour.vn
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 mb-3 text-md-end">
+                <h5 class="fw-bold mb-3">Theo dõi chúng tôi</h5>
+                <a href="#" class="text-light me-3 fs-5"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-light me-3 fs-5"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="text-light fs-5"><i class="bi bi-youtube"></i></a>
+            </div>
+        </div>
+        <hr class="bg-secondary">
+        <div class="text-center small text-secondary">
+            &copy; 2026 VivuTour. Bản quyền thuộc về Nhóm dự án ICTU.
+        </div>
+    </div>
+</footer>
+</body>
+</html>

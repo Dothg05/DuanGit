@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-md-6">
+            <div class="sticky-top" style="top: 20px;">
+                <img src="{{ url_for('static', filename='images/' + tour.image) }}" 
+                     class="img-fluid rounded-4 shadow-lg w-100" 
+                     alt="{{ tour.name }}"
+                     style="max-height: 500px; object-fit: cover;"
+                     onerror="this.src='https://via.placeholder.com/600x400?text=VivuTour'">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item active text-truncate" aria-current="page">{{ tour.name }}</li>
+                </ol>
+            </nav>
+            
+            <h1 class="fw-bold text-dark display-5 mb-3">{{ tour.name }}</h1>
+            <div class="d-flex align-items-center mb-4">
+                <h2 class="text-danger fw-bold mb-0 me-3">{{ tour.price }}</h2>
+                <span class="badge bg-success rounded-pill px-3 py-2">Còn chỗ</span>
+            </div>
+            
+            <hr class="my-4">
+            <div class="tour-description mb-5">
+                <h4 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>Thông tin chi tiết</h4>
+                <div class="text-muted lh-lg">
+                    {% if tour.description %}
+                        {{ tour.description | safe }}
+                    {% else %}
+                        <p class="fst-italic text-secondary">Thông tin lịch trình đang được cập nhật.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card border-0 bg-light rounded-4 p-4 shadow-sm">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('booking', tour_id=tour.id) }}" class="btn btn-primary btn-lg py-3 fw-bold rounded-pill shadow">
+                        ĐẶT TOUR NGAY <i class="bi bi-arrow-right-circle ms-2"></i>
+                    </a>
+                    <button class="btn btn-outline-secondary py-2 rounded-pill small">
+                        <i class="bi bi-telephone me-2"></i>Hỗ trợ: +84 375 012 005
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
