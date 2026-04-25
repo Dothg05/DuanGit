@@ -34,7 +34,7 @@ class Tour(db.Model):
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=True) 
+    description = db.Column(db.Text)  # Cột này sẽ chứa nội dung chi tiết
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +47,6 @@ class Booking(db.Model):
 # --- KHỞI TẠO DATABASE ---
 with app.app_context():
     db.create_all()
-    # Kiểm tra và tạo dữ liệu mẫu nếu chưa có tour nào
     if Tour.query.count() == 0:
         sample_tours = [
             Tour(name="Vịnh Hạ Long", price="2.000.000đ", image="halong.jpg", description="Khám phá kỳ quan thiên nhiên thế giới."),
@@ -62,7 +61,6 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    # Lấy từ khóa tìm kiếm từ thanh Search
     search_query = request.args.get('search')
     if search_query:
         all_tours = Tour.query.filter(Tour.name.contains(search_query)).all()
@@ -98,7 +96,6 @@ def register():
         if user_exists:
             flash('Email này đã được sử dụng!', 'danger')
             return redirect(url_for('register'))
-
         new_user = User(email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -125,7 +122,6 @@ def booking(tour_id):
     if request.method == 'POST':
         departure_date = request.form.get('departure_date')
         guests = request.form.get('guests')
-
         new_booking = Booking(
             user_id=current_user.id,
             tour_id=tour.id,
@@ -146,30 +142,33 @@ def add_tour():
     if current_user.email != 'admin@gmail.com': 
         flash('Bạn không có quyền truy cập trang này!', 'danger') 
         return redirect(url_for('index')) 
+    
     if request.method == 'POST':
         name = request.form.get('name') 
         price = request.form.get('price') 
-        description = request.form.get('description') 
+        description = request.form.get('description') # Lấy dữ liệu mô tả từ CKEditor/Textarea
         
-        # Xử lý File ảnh được tải lên
         file = request.files.get('image_file') 
+        filename = "default.jpg" # Giá trị mặc định nếu không có ảnh
+        
         if file and file.filename != '':
-            # Lưu file vật lý vào thư mục static/images
             filename = file.filename
+            # Tạo thư mục nếu chưa tồn tại
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-            # Lưu tên file vào Database
-            new_tour = Tour(name=name, price=price, image=filename, description=description) 
-            try:
-                db.session.add(new_tour) 
-                db.session.commit() 
-                flash('Thêm tour và tải ảnh thành công!', 'success')
-                return redirect(url_for('index'))
-            except:
-                db.session.rollback() 
-                flash('Có lỗi xảy ra khi thêm tour.', 'danger') 
-        else:
-            flash('Vui lòng chọn một file ảnh.', 'warning')
+        
+        # SỬA TẠI ĐÂY: Gán đầy đủ các trường vào đối tượng Tour
+        new_tour = Tour(name=name, price=price, image=filename, description=description) 
+        
+        try:
+            db.session.add(new_tour) 
+            db.session.commit() 
+            flash('Thêm tour thành công!', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback() 
+            flash(f'Có lỗi xảy ra: {str(e)}', 'danger') 
 
     return render_template('add_tour.html') 
 
@@ -184,7 +183,13 @@ def edit_tour(tour_id):
     if request.method == 'POST':
         tour.name = request.form.get('name')
         tour.price = request.form.get('price')
-        tour.image = request.form.get('image')
+        # SỬA TẠI ĐÂY: Ưu tiên lấy file ảnh mới nếu có tải lên
+        file = request.files.get('image_file')
+        if file and file.filename != '':
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            tour.image = filename
+        
         tour.description = request.form.get('description')
         
         try:
@@ -211,7 +216,7 @@ def delete_tour(tour_id):
         flash(f'Đã xóa tour {tour.name}!', 'success')
     except:
         db.session.rollback()
-        flash('Không thể xóa tour này (có thể có người đã đặt).', 'danger')
+        flash('Không thể xóa tour này.', 'danger')
     return redirect(url_for('index'))
 
 @app.route('/delete_booking/<int:booking_id>', methods=['POST'])
