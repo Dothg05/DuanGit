@@ -146,19 +146,17 @@ def add_tour():
     if request.method == 'POST':
         name = request.form.get('name') 
         price = request.form.get('price') 
-        description = request.form.get('description') # Lấy dữ liệu mô tả từ CKEditor/Textarea
+        description = request.form.get('description') 
         
         file = request.files.get('image_file') 
-        filename = "default.jpg" # Giá trị mặc định nếu không có ảnh
+        filename = "default.jpg" 
         
         if file and file.filename != '':
             filename = file.filename
-            # Tạo thư mục nếu chưa tồn tại
             if not os.path.exists(app.config['UPLOAD_FOLDER']):
                 os.makedirs(app.config['UPLOAD_FOLDER'])
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
-        # SỬA TẠI ĐÂY: Gán đầy đủ các trường vào đối tượng Tour
         new_tour = Tour(name=name, price=price, image=filename, description=description) 
         
         try:
@@ -183,7 +181,6 @@ def edit_tour(tour_id):
     if request.method == 'POST':
         tour.name = request.form.get('name')
         tour.price = request.form.get('price')
-        # SỬA TẠI ĐÂY: Ưu tiên lấy file ảnh mới nếu có tải lên
         file = request.files.get('image_file')
         if file and file.filename != '':
             filename = file.filename
@@ -233,4 +230,5 @@ def delete_booking(booking_id):
     return redirect(url_for('profile'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)

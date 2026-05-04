@@ -1,29 +1,26 @@
-/* Font chữ hiện đại */
+
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa; /* Màu nền xám nhạt cho web */
+    background-color: #f8f9fa;
 }
 
-/* Hiệu ứng cho ô nhập liệu khi nhấn vào */
 .form-control:focus {
     background-color: #fff !important;
-    box-shadow: 0 0 0 0.25 text-primary-focus-rgba; /* Nhạt thôi cho sang */
+    box-shadow: 0 0 0 0.25 text-primary-focus-rgba;
     border: 1px solid #0d6efd;
 }
 
-/* Bo góc cho Card */
 .rounded-4 {
     border-radius: 1.5rem !important;
 }
 
-/* Nút bấm có hiệu ứng nhấn */
 .btn-primary {
     transition: all 0.2s ease;
 }
 .btn-primary:active {
     transform: scale(0.98);
 }
-/* Hiệu ứng phóng to ảnh khi hover card */
+
 .tour-card {
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
@@ -35,7 +32,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Tùy chỉnh màu sắc chủ đạo */
 :root {
     --bs-primary: #0d6efd;
     --bs-primary-rgb: 13, 110, 253;
@@ -47,12 +43,10 @@ body {
     font-weight: 600;
 }
 
-/* Bo góc mượt mà cho input */
 .form-control {
     border-radius: 10px;
     padding: 0.75rem 1rem;
 }
-/* CSS hỗ trợ căn giữa ảnh từ CKEditor */
 .image-center {
     display: block;
     margin-left: auto;
@@ -71,8 +65,8 @@ body {
 }
 
 footer {
-    border-top: 3px solid #ffc107; /* Thêm đường kẻ vàng ở trên cùng footer cho đồng bộ với logo */
+    border-top: 3px solid #ffc107;
 }
 footer a:hover {
-    color: #ffc107 !important; /* Hiệu ứng đổi màu vàng khi di chuột vào icon mạng xã hội */
+    color: #ffc107 !important;
 }
